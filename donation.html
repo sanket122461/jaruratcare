@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Tracking Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+
+        header {
+            background: #4CAF50;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        canvas {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+    </style>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+    <header>
+        <h1>Donation Tracking Dashboard</h1>
+    </header>
+
+    <div class="container">
+
+        <!-- Summary Stats -->
+        <div class="stats">
+            <div class="card">
+                <h2 id="totalDonations">₹0</h2>
+                <p>Total Donations</p>
+            </div>
+
+            <div class="card">
+                <h2 id="donorCount">0</h2>
+                <p>Number of Donors</p>
+            </div>
+        </div>
+
+        <!-- Donations Table -->
+        <h2>Donation Records</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Donor Name</th>
+                    <th>Amount (₹)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="donationTable"></tbody>
+        </table>
+
+        <!-- Donation Trend Chart -->
+        <canvas id="donationChart" height="100"></canvas>
+
+    </div>
+
+    <script>
+        // Dummy Donation Data
+        const donations = [
+            { name: "Amit", amount: 500, date: "2025-01-12" },
+            { name: "Sneha", amount: 1200, date: "2025-01-13" },
+            { name: "Ravi", amount: 800, date: "2025-01-14" },
+            { name: "Pooja", amount: 1500, date: "2025-01-15" },
+            { name: "John", amount: 2000, date: "2025-01-16" }
+        ];
+
+        // Load Table
+        const tableBody = document.getElementById("donationTable");
+        donations.forEach(d => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${d.name}</td>
+                    <td>₹${d.amount}</td>
+                    <td>${d.date}</td>
+                </tr>`;
+        });
+
+        // Calculate Summary Stats
+        const total = donations.reduce((sum, d) => sum + d.amount, 0);
+        const donors = donations.length;
+
+        document.getElementById("totalDonations").innerText = "₹" + total;
+        document.getElementById("donorCount").innerText = donors;
+
+        // Chart Data
+        const dates = donations.map(d => d.date);
+        const amounts = donations.map(d => d.amount);
+
+        const ctx = document.getElementById("donationChart").getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "Donation Trend (₹)",
+                    data: amounts,
+                    borderWidth: 3,
+                    borderColor: "#4CAF50",
+                    fill: false
+                }]
+            }
+        });
+    </script>
+
+</body>
+</html>
